@@ -38,6 +38,7 @@ main { width: 100%; }
     overflow-y: auto; 
     z-index: 1000;
     box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    position: relative;
 }
 #suggestions-box::-webkit-scrollbar { width: 12px; }
 #suggestions-box::-webkit-scrollbar-track { background: #2c2c2d; }
