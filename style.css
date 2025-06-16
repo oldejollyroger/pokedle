@@ -10,26 +10,44 @@
     --font-main: 'Roboto Mono', monospace;
     --font-8bit: 'Silkscreen', cursive;
     
-    /* NEW: Authentic Game Boy 4-Color Palette */
     --gb-darkest: #0f380f;
     --gb-dark: #306230;
     --gb-light: #8bac0f;
     --gb-lightest: #9bbc0f;
 }
 
-/* --- DEFAULT DARK THEME --- */
 body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); display: flex; justify-content: center; align-items: flex-start; margin: 0; padding: 2rem 1rem; transition: background-color 0.3s ease; min-height: 100vh; box-sizing: border-box; }
 #pokedex-body { width: 100%; max-width: 1200px; display: flex; justify-content: center; gap: 20px; }
 .pokedex-panel.right { flex-grow: 1; }
-.pokedex-panel.left { display: none; } /* Hide left panel in default theme */
-
+.pokedex-panel.left { display: none; }
 header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; width: 100%; }
 h1 { font-family: var(--font-pixel); font-size: clamp(1.5rem, 5vw, 2.5rem); color: #FFDE00; text-shadow: 3px 3px 0 #3B4CCA; margin: 0; }
 main { width: 100%; }
 #input-area { display: flex; gap: 10px; margin-bottom: 1.5rem; align-items: center; }
 .autocomplete-container { position: relative; flex-grow: 1; }
 #guess-input { width: 100%; padding: 12px; font-size: 1rem; background-color: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 5px; font-family: var(--font-main); box-sizing: border-box; }
-#suggestions-box { position: absolute; top: 100%; left: 0; right: 0; background: var(--input-bg); border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 5px 5px; max-height: 240px; overflow-y: auto; z-index: 10; }
+
+/* --- FIX: Styling the suggestion box to be larger and float over content --- */
+#suggestions-box { 
+    position: absolute; 
+    top: 100%; 
+    left: 0; 
+    right: 0; 
+    background: var(--input-bg); 
+    border: 1px solid var(--border-color); 
+    border-top: none; 
+    border-radius: 0 0 5px 5px; 
+    max-height: 50vh; /* Allow it to take up to half the screen height */
+    overflow-y: auto; 
+    z-index: 100; /* Ensure it's on top of everything */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Add a shadow to make it "pop" */
+}
+/* Custom scrollbar for a better look */
+#suggestions-box::-webkit-scrollbar { width: 10px; }
+#suggestions-box::-webkit-scrollbar-track { background: #2c2c2d; }
+#suggestions-box::-webkit-scrollbar-thumb { background: #555; border-radius: 5px; }
+#suggestions-box::-webkit-scrollbar-thumb:hover { background: #777; }
+
 .suggestion-item { padding: 8px 12px; cursor: pointer; text-transform: capitalize; display: flex; align-items: center; gap: 15px; }
 .suggestion-item:hover { background-color: #444; }
 .suggestion-item img { width: 50px; height: 50px; }
@@ -57,7 +75,7 @@ main { width: 100%; }
 
 /*
 =====================================================
---- 8-BIT POKEDEX THEME STYLES (AUTHENTIC OVERHAUL) ---
+--- 8-BIT POKEDEX THEME STYLES ---
 =====================================================
 */
 body.theme-pokedex { background-color: #333; font-family: var(--font-8bit) !important; }
@@ -86,11 +104,10 @@ body.theme-pokedex .pokedex-panel.left { display: flex; flex-direction: column; 
 .d-pad .center { width: 40px; height: 40px; top: 40px; left: 40px; border-radius: 50%; }
 .speaker-grille { display: flex; flex-direction: column; gap: 4px; }
 .speaker-line { width: 80px; height: 4px; background-color: #222; border-radius: 2px; }
-
 body.theme-pokedex .screen-container { background-color: var(--gb-lightest); color: var(--gb-darkest); border: 4px solid #222; padding: 15px; }
-body.theme-pokedex header { margin-bottom: 1rem; }
-body.theme-pokedex h1 { font-family: var(--font-pixel); color: var(--gb-darkest); text-shadow: none; font-size: 1.5rem; }
-body.theme-pokedex #theme-switcher { background-color: var(--gb-darkest); color: var(--gb-lightest); border-radius: 0; border: none; }
+body.theme-pokedex header { margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; padding: 0; min-height: auto; }
+body.theme-pokedex h1 { font-family: var(--font-pixel); color: var(--gb-darkest); text-shadow: none; font-size: 1.5rem; text-align: center; }
+body.theme-pokedex #theme-switcher { background-color: var(--gb-darkest); color: var(--gb-lightest); border-radius: 0; border: none; justify-self: end; }
 body.theme-pokedex #guess-input { background-color: var(--gb-light); border-color: var(--gb-dark); border-radius: 0; color: var(--gb-darkest); }
 body.theme-pokedex #guess-input::placeholder { color: var(--gb-dark); }
 body.theme-pokedex #submit-guess { background-color: var(--gb-dark); border: 2px solid var(--gb-darkest); color: var(--gb-lightest); border-radius: 0; }

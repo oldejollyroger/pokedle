@@ -75,20 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateSuggestions() {
         const query = guessInput.value.toLowerCase();
         suggestionsBox.innerHTML = '';
-
-        // Get all Pokémon that have not been guessed yet
-        const availablePokemon = ALL_POKEMON_DATA.filter(p => !guessedNames.has(p.name));
         
-        let suggestionsToShow;
-
-        if (query.length === 0) {
-            // --- FIX: If input is empty, show a random sample of 12 Pokémon ---
-            const shuffled = availablePokemon.sort(() => 0.5 - Math.random());
-            suggestionsToShow = shuffled.slice(0, 12);
-        } else {
-            // --- If user is typing, filter the entire available list ---
-            suggestionsToShow = availablePokemon.filter(p => p.name.toLowerCase().startsWith(query));
-        }
+        // --- FIX: Logic is simplified to show the full list or the filtered list ---
+        const availablePokemon = ALL_POKEMON_DATA.filter(p => !guessedNames.has(p.name));
+        const suggestionsToShow = query.length === 0 
+            ? availablePokemon // Show all available if query is empty
+            : availablePokemon.filter(p => p.name.toLowerCase().startsWith(query)); // Show filtered if typing
 
         suggestionsToShow.forEach(pokemon => {
             const div = document.createElement('div');
