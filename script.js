@@ -28,11 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- THEME SWITCHING LOGIC ---
     function applyTheme(theme) {
         currentTheme = theme;
-        if (theme === 'pokedex') {
-            document.body.classList.add('theme-pokedex');
-        } else {
-            document.body.classList.remove('theme-pokedex');
-        }
+        document.body.className = ''; // Clear all classes
+        document.body.classList.add(`${theme}-theme`);
         localStorage.setItem('pokedle_theme', theme);
         redrawGridWithNewImages();
     }
@@ -67,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.add('modal-hidden');
     }
     
-    // --- FIX: NEW FUNCTION to dynamically position the suggestion box ---
+    // --- Autocomplete Positioning and Logic ---
     function positionSuggestionsBox() {
         const inputRect = guessInput.getBoundingClientRect();
         suggestionsBox.style.left = `${inputRect.left}px`;
@@ -75,9 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
         suggestionsBox.style.width = `${inputRect.width}px`;
     }
 
-    // --- Autocomplete Suggestions ---
     function updateSuggestions() {
-        positionSuggestionsBox(); // Position the box every time it updates
+        positionSuggestionsBox();
         const query = guessInput.value.toLowerCase();
         suggestionsBox.innerHTML = '';
         const availablePokemon = ALL_POKEMON_DATA.filter(p => !guessedNames.has(p.name));
@@ -91,28 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
             div.innerHTML = `<img src="${getPokemonImageUrl(pokemon.id)}" alt="${pokemon.name}"><span>${pokemon.name}</span>`;
             div.addEventListener('click', () => {
                 guessInput.value = pokemon.name;
-                suggestionsBox.style.display = 'none'; // Hide it on click
+                suggestionsBox.style.display = 'none';
             });
             suggestionsBox.appendChild(div);
         });
-        suggestionsBox.style.display = 'block'; // Make sure it's visible
+        suggestionsBox.style.display = 'block';
     }
 
     guessInput.addEventListener('focus', updateSuggestions);
     guessInput.addEventListener('input', updateSuggestions);
-    
-    // Hide the box if user clicks elsewhere
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.autocomplete-container')) {
-            suggestionsBox.style.display = 'none';
-        }
-    });
-    // Reposition the box if the window is resized
-    window.addEventListener('resize', () => {
-        if (suggestionsBox.style.display === 'block') {
-            positionSuggestionsBox();
-        }
-    });
+    document.addEventListener('click', (e) => { if (!e.target.closest('.autocomplete-container')) { suggestionsBox.style.display = 'none'; } });
+    window.addEventListener('resize', () => { if (suggestionsBox.style.display === 'block') { positionSuggestionsBox(); } });
 
     // --- Guess Handling ---
     function handleGuess() {
@@ -153,17 +138,20 @@ document.addEventListener('DOMContentLoaded', () => {
         row.appendChild(compareAttribute(guessedPokemon.evolutionStage, secretPokemon.evolutionStage, ''));
         gridBody.prepend(row);
     }
+    
+    // --- FIX: Corrected variable names here ---
     function compareTypes(guessed, secret) {
         const secretTypes = [secret.type1, secret.type2].filter(Boolean);
-        const createTypeCell = (type, status) => createCell(type || '---', status);
         let t1_status = 'incorrect';
         if (guessed.type1 === secret.type1) t1_status = 'correct';
         else if (secretTypes.includes(guessed.type1)) t1_status = 'partial';
         let t2_status = 'incorrect';
         if (guessed.type2 === secret.type2) t2_status = 'correct';
         else if (secretTypes.includes(guessed.type2)) t2_status = 'partial';
-        return [createTypeCell(guessed.type1, t1_status), createTypeCell(guessed.type2, t2_status)];
+        // Use `guessed.type1` and `guessed.type2` instead of the undefined `type1`, `type2`
+        return [createCell(guessed.type1 || '---', t1_status), createCell(guessed.type2 || '---', t2_status)];
     }
+
     function compareAttribute(guessedValue, secretValue, unit) {
         let status = 'incorrect';
         let arrow = '';
