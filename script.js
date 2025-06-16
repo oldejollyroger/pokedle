@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- THEME SWITCHING LOGIC ---
     function applyTheme(theme) {
         currentTheme = theme;
-        document.body.className = ''; // Clear all classes
+        document.body.className = '';
         document.body.classList.add(`${theme}-theme`);
         localStorage.setItem('pokedle_theme', theme);
         redrawGridWithNewImages();
@@ -66,10 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- Autocomplete Positioning and Logic ---
     function positionSuggestionsBox() {
-        const inputRect = guessInput.getBoundingClientRect();
-        suggestionsBox.style.left = `${inputRect.left}px`;
-        suggestionsBox.style.top = `${inputRect.bottom}px`;
-        suggestionsBox.style.width = `${inputRect.width}px`;
+        // --- THE GUARANTEED FIX IS HERE ---
+        // We wrap the positioning logic in a timeout of 0ms.
+        // This pushes it to the end of the event queue, after the browser has finished rendering the CSS changes.
+        setTimeout(() => {
+            const inputRect = guessInput.getBoundingClientRect();
+            suggestionsBox.style.left = `${inputRect.left}px`;
+            suggestionsBox.style.top = `${inputRect.bottom}px`;
+            suggestionsBox.style.width = `${inputRect.width}px`;
+        }, 0);
     }
 
     function updateSuggestions() {
@@ -138,8 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
         row.appendChild(compareAttribute(guessedPokemon.evolutionStage, secretPokemon.evolutionStage, ''));
         gridBody.prepend(row);
     }
-    
-    // --- FIX: Corrected variable names here ---
     function compareTypes(guessed, secret) {
         const secretTypes = [secret.type1, secret.type2].filter(Boolean);
         let t1_status = 'incorrect';
@@ -148,10 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let t2_status = 'incorrect';
         if (guessed.type2 === secret.type2) t2_status = 'correct';
         else if (secretTypes.includes(guessed.type2)) t2_status = 'partial';
-        // Use `guessed.type1` and `guessed.type2` instead of the undefined `type1`, `type2`
         return [createCell(guessed.type1 || '---', t1_status), createCell(guessed.type2 || '---', t2_status)];
     }
-
     function compareAttribute(guessedValue, secretValue, unit) {
         let status = 'incorrect';
         let arrow = '';
