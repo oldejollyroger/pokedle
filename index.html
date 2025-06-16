@@ -10,10 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@500;700&family=Silkscreen&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- NEW: Main container for the two-panel layout -->
     <div id="pokedex-body">
-        
-        <!-- ================== LEFT PANEL ================== -->
         <div class="pokedex-panel left">
             <div class="pokedex-header">
                 <div class="pokedex-lights">
@@ -40,8 +37,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- ================== RIGHT PANEL (THE GAME) ================== -->
         <div class="pokedex-panel right">
             <div class="screen-container">
                 <header>
@@ -53,11 +48,10 @@
                         <div id="input-area">
                             <div class="autocomplete-container">
                                 <input type="text" id="guess-input" placeholder="Click here to see list..." autocomplete="off">
-                                <div id="suggestions-box"></div>
+                                <!-- THE SUGGESTION BOX IS NO LONGER HERE -->
                             </div>
                             <button id="submit-guess">Guess!</button>
                         </div>
-            
                         <div id="guesses-grid">
                             <div class="grid-header">
                                 <div class="grid-cell">Pokémon</div>
@@ -68,9 +62,7 @@
                                 <div class="grid-cell">Weight</div>
                                 <div class="grid-cell">Evo. Stage</div>
                             </div>
-                            <div id="grid-body">
-                                <!-- Guess rows will be inserted here -->
-                            </div>
+                            <div id="grid-body"></div>
                         </div>
                     </div>
                 </main>
@@ -86,6 +78,9 @@
         </div>
     </div>
     
+    <!-- FIX: The suggestion box is now here, at the top level of the body -->
+    <div id="suggestions-box"></div>
+
     <script src="./database.js"></script>
     <script src="./script.js"></script>
 </body>

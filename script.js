@@ -42,9 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const reversedGuesses = Array.from(guessedNames).reverse();
         reversedGuesses.forEach(name => {
             const pokemon = ALL_POKEMON_DATA.find(p => p.name === name);
-            if (pokemon) {
-                displayGuessRow(pokemon);
-            }
+            if (pokemon) { displayGuessRow(pokemon); }
         });
     }
 
@@ -59,9 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initGame() {
         const savedTheme = localStorage.getItem('pokedle_theme') || 'default';
         applyTheme(savedTheme);
-
         secretPokemon = ALL_POKEMON_DATA[Math.floor(Math.random() * ALL_POKEMON_DATA.length)];
-        console.log("Secret Pokémon:", secretPokemon.name);
         isGameOver = false;
         guessedNames.clear();
         gridBody.innerHTML = '';
@@ -70,39 +66,51 @@ document.addEventListener('DOMContentLoaded', () => {
         submitButton.disabled = false;
         modal.classList.add('modal-hidden');
     }
+    
+    // --- FIX: NEW FUNCTION to dynamically position the suggestion box ---
+    function positionSuggestionsBox() {
+        const inputRect = guessInput.getBoundingClientRect();
+        suggestionsBox.style.left = `${inputRect.left}px`;
+        suggestionsBox.style.top = `${inputRect.bottom}px`;
+        suggestionsBox.style.width = `${inputRect.width}px`;
+    }
 
     // --- Autocomplete Suggestions ---
     function updateSuggestions() {
+        positionSuggestionsBox(); // Position the box every time it updates
         const query = guessInput.value.toLowerCase();
         suggestionsBox.innerHTML = '';
-        
-        // --- FIX: Logic is simplified to show the full list or the filtered list ---
         const availablePokemon = ALL_POKEMON_DATA.filter(p => !guessedNames.has(p.name));
         const suggestionsToShow = query.length === 0 
-            ? availablePokemon // Show all available if query is empty
-            : availablePokemon.filter(p => p.name.toLowerCase().startsWith(query)); // Show filtered if typing
+            ? availablePokemon 
+            : availablePokemon.filter(p => p.name.toLowerCase().startsWith(query));
 
         suggestionsToShow.forEach(pokemon => {
             const div = document.createElement('div');
             div.className = 'suggestion-item';
-            div.innerHTML = `
-                <img src="${getPokemonImageUrl(pokemon.id)}" alt="${pokemon.name}">
-                <span>${pokemon.name}</span>
-            `;
+            div.innerHTML = `<img src="${getPokemonImageUrl(pokemon.id)}" alt="${pokemon.name}"><span>${pokemon.name}</span>`;
             div.addEventListener('click', () => {
                 guessInput.value = pokemon.name;
-                suggestionsBox.innerHTML = '';
+                suggestionsBox.style.display = 'none'; // Hide it on click
             });
             suggestionsBox.appendChild(div);
         });
+        suggestionsBox.style.display = 'block'; // Make sure it's visible
     }
 
     guessInput.addEventListener('focus', updateSuggestions);
     guessInput.addEventListener('input', updateSuggestions);
-
+    
+    // Hide the box if user clicks elsewhere
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.autocomplete-container')) {
-            suggestionsBox.innerHTML = '';
+            suggestionsBox.style.display = 'none';
+        }
+    });
+    // Reposition the box if the window is resized
+    window.addEventListener('resize', () => {
+        if (suggestionsBox.style.display === 'block') {
+            positionSuggestionsBox();
         }
     });
 
@@ -111,32 +119,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isGameOver) return;
         const guessName = guessInput.value.toUpperCase();
         const guessedPokemon = ALL_POKEMON_DATA.find(p => p.name === guessName);
-
-        if (!guessedPokemon) {
-            alert("Pokémon not found! Please choose from the list.");
-            return;
-        }
-        if (guessedNames.has(guessName)) {
-            alert("You've already guessed that Pokémon!");
-            return;
-        }
-
+        if (!guessedPokemon) { alert("Pokémon not found!"); return; }
+        if (guessedNames.has(guessName)) { alert("You've already guessed that Pokémon!"); return; }
         guessedNames.add(guessName);
         displayGuessRow(guessedPokemon);
-
-        if (guessedPokemon.name === secretPokemon.name) {
-            endGame(true);
-        }
-
+        if (guessedPokemon.name === secretPokemon.name) { endGame(true); }
         guessInput.value = '';
-        suggestionsBox.innerHTML = '';
+        suggestionsBox.style.display = 'none';
         guessInput.blur();
     }
 
     submitButton.addEventListener('click', handleGuess);
-    guessInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') handleGuess();
-    });
+    guessInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleGuess(); });
 
     // --- Display and Comparison Logic ---
     const createCell = (value, className = '') => {
@@ -145,14 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.innerHTML = value;
         return cell;
     };
-
     function displayGuessRow(guessedPokemon) {
         const row = document.createElement('div');
         row.className = 'grid-row';
-        const pokemonCellContent = `
-            <img src="${getPokemonImageUrl(guessedPokemon.id)}" alt="${guessedPokemon.name}">
-            <span>${guessedPokemon.name}</span>
-        `;
+        const pokemonCellContent = `<img src="${getPokemonImageUrl(guessedPokemon.id)}" alt="${guessedPokemon.name}"><span>${guessedPokemon.name}</span>`;
         row.appendChild(createCell(pokemonCellContent, 'pokemon-cell'));
         row.appendChild(createCell(guessedPokemon.generation, guessedPokemon.generation === secretPokemon.generation ? 'correct' : 'incorrect'));
         const [type1Cell, type2Cell] = compareTypes(guessedPokemon, secretPokemon);
@@ -163,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
         row.appendChild(compareAttribute(guessedPokemon.evolutionStage, secretPokemon.evolutionStage, ''));
         gridBody.prepend(row);
     }
-
     function compareTypes(guessed, secret) {
         const secretTypes = [secret.type1, secret.type2].filter(Boolean);
         const createTypeCell = (type, status) => createCell(type || '---', status);
@@ -175,21 +164,14 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (secretTypes.includes(guessed.type2)) t2_status = 'partial';
         return [createTypeCell(guessed.type1, t1_status), createTypeCell(guessed.type2, t2_status)];
     }
-
     function compareAttribute(guessedValue, secretValue, unit) {
         let status = 'incorrect';
         let arrow = '';
-        if (guessedValue === secretValue) {
-            status = 'correct';
-        } else if (guessedValue < secretValue) {
-            arrow = '<span>⬆️</span>';
-        } else {
-            arrow = '<span>⬇️</span>';
-        }
+        if (guessedValue === secretValue) { status = 'correct'; } 
+        else if (guessedValue < secretValue) { arrow = '<span>⬆️</span>'; } 
+        else { arrow = '<span>⬇️</span>'; }
         return createCell(`${guessedValue}${unit} ${arrow}`, status);
     }
-    
-    // --- End Game Logic ---
     function endGame(isWin) {
         isGameOver = true;
         guessInput.disabled = true;
@@ -203,8 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.remove('modal-hidden');
         }, 1000);
     }
-
     playAgainButton.addEventListener('click', initGame);
-
     initGame();
 });

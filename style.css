@@ -16,7 +16,6 @@
     --gb-lightest: #9bbc0f;
 }
 
-/* --- Base Layout --- */
 body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); display: flex; justify-content: center; align-items: flex-start; margin: 0; padding: 2rem 1rem; transition: background-color 0.3s ease; min-height: 100vh; box-sizing: border-box; }
 #pokedex-body { width: 100%; max-width: 1200px; display: flex; justify-content: center; gap: 20px; }
 .pokedex-panel.right { flex-grow: 1; }
@@ -28,15 +27,13 @@ main { width: 100%; }
 .autocomplete-container { position: relative; flex-grow: 1; }
 #guess-input { width: 100%; padding: 12px; font-size: 1rem; background-color: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 5px; font-family: var(--font-main); box-sizing: border-box; }
 
+/* --- FIX: Suggestion box is now a top-level, fixed element --- */
 #suggestions-box { 
-    position: absolute; 
-    top: 100%; 
-    left: 0; 
-    right: 0; 
+    position: fixed; /* Fixed position relative to the viewport */
+    display: none; /* Hidden by default */
     background: var(--input-bg); 
     border: 2px solid var(--border-color);
-    border-top: none; 
-    border-radius: 0 0 8px 8px;
+    border-radius: 8px;
     max-height: 60vh;
     overflow-y: auto; 
     z-index: 1000;
@@ -72,11 +69,7 @@ main { width: 100%; }
 #winner-pokemon-image { width: 180px; height: 180px; margin-bottom: 1rem; }
 #theme-switcher { padding: 8px 12px; background-color: #444; color: white; border: 1px solid #666; border-radius: 5px; cursor: pointer; font-family: var(--font-main); }
 
-/*
-=====================================================
---- 8-BIT POKEDEX THEME STYLES ---
-=====================================================
-*/
+/* POKEDEX THEME */
 body.theme-pokedex { background-color: #333; font-family: var(--font-8bit) !important; }
 body.theme-pokedex #pokedex-body { border: 4px solid #222; background: linear-gradient(to right, #222 50%, #d12a2a 50%); box-shadow: 5px 5px 15px rgba(0,0,0,0.4); }
 body.theme-pokedex .pokedex-panel { padding: 20px; background-color: #d12a2a; }
@@ -107,16 +100,7 @@ body.theme-pokedex .screen-container { background-color: var(--gb-darkest); colo
 body.theme-pokedex header { margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; padding: 0; min-height: auto; }
 body.theme-pokedex h1 { font-family: var(--font-pixel); color: var(--gb-lightest); text-shadow: none; font-size: 1.5rem; text-align: center; }
 body.theme-pokedex #theme-switcher { background-color: var(--gb-dark); color: var(--gb-lightest); border-radius: 0; border: none; justify-self: end; }
-
-/* --- THE FIX IS HERE --- */
-/* The problematic 'overflow: hidden' has been removed from this rule */
-body.theme-pokedex main { 
-    border: 4px solid #222; 
-    border-radius: 0; 
-    padding: 0;
-    box-shadow: none;
-}
-
+body.theme-pokedex main { border: 4px solid #222; border-radius: 0; padding: 0; box-shadow: none; }
 body.theme-pokedex #guess-input { background-color: var(--gb-lightest); border-color: var(--gb-dark); border-radius: 0; color: var(--gb-darkest); margin: 15px; width: calc(100% - 30px); }
 body.theme-pokedex #input-area { margin-bottom: 0; }
 body.theme-pokedex #submit-guess { background-color: var(--gb-dark); border: 2px solid var(--gb-darkest); color: var(--gb-lightest); border-radius: 0; margin: 15px; }
