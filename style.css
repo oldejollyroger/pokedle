@@ -1,0 +1,104 @@
+:root {
+    --bg-color: #1a1a1b;
+    --text-color: #f8f8f8;
+    --border-color: #3a3a3c;
+    --input-bg: #272729;
+    --correct: #538d4e;
+    --partial: #b59f3b;
+    --incorrect: #3a3a3c;
+    --font-pixel: 'Press Start 2P', cursive;
+    --font-main: 'Roboto Mono', monospace;
+    --font-8bit: 'Silkscreen', cursive;
+}
+
+/* --- DEFAULT DARK THEME --- */
+body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); display: flex; justify-content: center; align-items: flex-start; margin: 0; padding: 2rem 1rem; transition: background-color 0.3s ease; min-height: 100vh; box-sizing: border-box; }
+#pokedex-case { width: 100%; max-width: 900px; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; width: 100%; position: relative; }
+h1 { font-family: var(--font-pixel); font-size: clamp(1.5rem, 5vw, 2.5rem); color: #FFDE00; text-shadow: 3px 3px 0 #3B4CCA; margin: 0; }
+main { width: 100%; }
+#input-area { display: flex; gap: 10px; margin-bottom: 1.5rem; align-items: center; }
+.autocomplete-container { position: relative; flex-grow: 1; }
+#guess-input { width: 100%; padding: 12px; font-size: 1rem; background-color: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 5px; font-family: var(--font-main); box-sizing: border-box; }
+#suggestions-box { position: absolute; top: 100%; left: 0; right: 0; background: var(--input-bg); border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 5px 5px; max-height: 240px; overflow-y: auto; z-index: 10; }
+.suggestion-item { padding: 8px 12px; cursor: pointer; text-transform: capitalize; display: flex; align-items: center; gap: 15px; }
+.suggestion-item:hover { background-color: #444; }
+.suggestion-item img { width: 50px; height: 50px; }
+#submit-guess { padding: 12px 20px; font-size: 1rem; font-weight: bold; background-color: var(--correct); color: white; border: none; border-radius: 5px; cursor: pointer; transition: filter 0.2s ease-out; }
+#submit-guess:hover { filter: brightness(1.1); }
+#guesses-grid { display: flex; flex-direction: column; gap: 5px; }
+.grid-header, .grid-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+.grid-row { align-items: stretch; }
+.grid-header .grid-cell { font-weight: bold; font-size: 0.8rem; padding: 5px; }
+.grid-cell { background-color: var(--incorrect); border-radius: 4px; padding: 0.5rem; display: flex; justify-content: center; align-items: center; font-size: clamp(0.7rem, 2.5vw, 0.9rem); font-weight: 500; text-transform: capitalize; min-height: 80px; overflow-wrap: break-word; }
+.grid-cell.correct { background-color: var(--correct); }
+.grid-cell.partial { background-color: var(--partial); }
+.grid-cell span { margin: 0 5px; }
+.grid-cell.pokemon-cell { flex-direction: column; gap: 5px; padding: 10px 5px; font-size: 0.8em; }
+.grid-cell.pokemon-cell img { width: 64px; height: 64px; }
+.grid-cell.pokemon-cell img, .suggestion-item img, #winner-pokemon-image { image-rendering: pixelated; image-rendering: -moz-crisp-edges; image-rendering: crisp-edges; }
+#game-over-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 100; }
+.modal-hidden { display: none !important; }
+.modal-content { background-color: #2c2c2d; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+#game-over-message { margin: 10px 0 20px 0; font-size: 1.2rem; }
+#game-over-message strong { color: var(--correct); text-transform: capitalize; }
+#play-again-button { background-color: var(--correct); color: var(--text-color); border: none; padding: 12px 25px; font-size: 1rem; font-weight: bold; border-radius: 5px; cursor: pointer; }
+#winner-pokemon-image { width: 180px; height: 180px; margin-bottom: 1rem; }
+#theme-switcher { padding: 8px 12px; background-color: #444; color: white; border: 1px solid #666; border-radius: 5px; cursor: pointer; font-family: var(--font-main); }
+
+/*
+=====================================================
+--- 8-BIT POKEDEX THEME STYLES (REVISED) ---
+=====================================================
+*/
+#pokedex-lights { display: none; }
+body.theme-pokedex { background-color: #333; font-family: var(--font-8bit) !important; }
+body.theme-pokedex #pokedex-case { background-color: #d12a2a; border: 4px solid #222; border-radius: 0; padding: 20px; box-shadow: none; position: relative; }
+body.theme-pokedex #pokedex-lights { display: flex; gap: 10px; }
+.light { border: 2px solid #222; border-radius: 50%; box-shadow: none; }
+.big-light { width: 50px; height: 50px; border-width: 4px; }
+.small-light { width: 20px; height: 20px; }
+.light.blue { background-color: #3ca9d4; }
+.light.red { background-color: #ff4747; animation: blink 2s infinite; }
+.light.yellow { background-color: #ffde00; }
+.light.green { background-color: #538d4e; }
+@keyframes blink { 50% { opacity: 0.3; } }
+body.theme-pokedex h1 { color: #222; text-shadow: none; font-family: var(--font-pixel); }
+
+/* --- FIX #1: Header layout is now properly structured --- */
+body.theme-pokedex header {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* 3 columns: lights, title, button */
+    align-items: center;
+    padding: 0;
+    min-height: 60px;
+}
+body.theme-pokedex h1 {
+    text-align: center; /* Center the title in its column */
+}
+body.theme-pokedex #theme-switcher {
+    justify-self: end; /* Align the button to the right of its column */
+}
+
+/* --- FIX #3: Table fits the box by removing padding from main --- */
+body.theme-pokedex main { 
+    border: 4px solid #222; 
+    border-radius: 0; 
+    padding: 0; /* Remove padding */
+    box-shadow: none; 
+    overflow: hidden; /* Ensures grid corners touch the border */
+}
+
+/* --- FIX #2: New, less confusing cell colors --- */
+body.theme-pokedex main { background-color: #2a382f; /* Dark, neutral screen color */ color: #d0e0c0; }
+body.theme-pokedex #guess-input { background-color: #3a4c42; border-color: #222; border-radius: 0; color: #d0e0c0; margin: 15px; width: calc(100% - 30px); }
+body.theme-pokedex #input-area { margin-bottom: 0; }
+body.theme-pokedex #submit-guess { background-color: #555; border: 2px solid #222; color: white; border-radius: 0; margin: 15px; }
+body.theme-pokedex .grid-cell { background-color: #3a4c42; /* Slightly lighter than screen, but still dark */ border: 1px solid #2a382f; border-radius: 0; color: #d0e0c0; }
+body.theme-pokedex .grid-header .grid-cell { background-color: transparent; border: none; }
+body.theme-pokedex .grid-cell.correct { background-color: #306230; color: white; }
+body.theme-pokedex .grid-cell.partial { background-color: #947215; color: white; }
+body.theme-pokedex #suggestions-box { background-color: #2a382f; border-color: #222; border-radius: 0; }
+body.theme-pokedex .suggestion-item:hover { background-color: #3a4c42; }
+body.theme-pokedex .modal-content { border-radius: 0; border: 4px solid #222; background-color: #8bac0f; color: #222; }
+body.theme-pokedex #play-again-button { background-color: #555; border: 2px solid #222; color: white; border-radius: 0; }

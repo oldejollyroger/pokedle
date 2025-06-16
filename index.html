@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Pokédle - The Pokémon Guessing Game</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- UPDATED: Added the new "Silkscreen" font for our 8-bit theme -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@500;700&family=Silkscreen&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="pokedex-case">
+        <header>
+            <h1>Classic Pokédle</h1>
+            <button id="theme-switcher">Switch Theme</button>
+        </header>
+        
+        <div id="pokedex-lights">
+            <div class="light big-light blue"></div>
+            <div class="light small-light red"></div>
+            <div class="light small-light yellow"></div>
+            <div class="light small-light green"></div>
+        </div>
+
+        <main>
+            <div id="game-container">
+                <div id="input-area">
+                    <div class="autocomplete-container">
+                        <input type="text" id="guess-input" placeholder="Click here to see list..." autocomplete="off">
+                        <div id="suggestions-box"></div>
+                    </div>
+                    <button id="submit-guess">Guess!</button>
+                </div>
+    
+                <div id="guesses-grid">
+                    <div class="grid-header">
+                        <div class="grid-cell">Pokémon</div>
+                        <div class="grid-cell">Gen</div>
+                        <div class="grid-cell">Type 1</div>
+                        <div class="grid-cell">Type 2</div>
+                        <div class="grid-cell">Height</div>
+                        <div class="grid-cell">Weight</div>
+                        <div class="grid-cell">Evo. Stage</div>
+                    </div>
+                    <div id="grid-body">
+                        <!-- Guess rows will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="game-over-modal" class="modal-hidden">
+        <div class="modal-content">
+            <img id="winner-pokemon-image" src="" alt="Winning Pokémon">
+            <p id="game-over-message"></p>
+            <button id="play-again-button">Play Again</button>
+        </div>
+    </div>
+    
+    <script src="./database.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
