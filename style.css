@@ -3,7 +3,7 @@
     --text-color: #f8f8f8;
     --border-color: #3a3a3c;
     --input-bg: #272729;
-    --correct: #306230; /* Darker green for better contrast on light screen */
+    --correct: #306230;
     --partial: #947215;
     --incorrect: #3a3a3c;
     --font-pixel: 'Press Start 2P', cursive;
@@ -16,6 +16,7 @@
     --gb-lightest: #9bbc0f;
 }
 
+/* --- Base Layout --- */
 body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); display: flex; justify-content: center; align-items: flex-start; margin: 0; padding: 2rem 1rem; transition: background-color 0.3s ease; min-height: 100vh; box-sizing: border-box; }
 #pokedex-body { width: 100%; max-width: 1200px; display: flex; justify-content: center; gap: 20px; }
 .pokedex-panel.right { flex-grow: 1; }
@@ -27,25 +28,25 @@ main { width: 100%; }
 .autocomplete-container { position: relative; flex-grow: 1; }
 #guess-input { width: 100%; padding: 12px; font-size: 1rem; background-color: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 5px; font-family: var(--font-main); box-sizing: border-box; }
 
-/* --- FIX: Styling the suggestion box to be larger and float over content --- */
+/* --- FIX: The definitive update for the suggestion box --- */
 #suggestions-box { 
     position: absolute; 
     top: 100%; 
     left: 0; 
     right: 0; 
     background: var(--input-bg); 
-    border: 1px solid var(--border-color); 
+    border: 2px solid var(--border-color); /* Thicker border */
     border-top: none; 
-    border-radius: 0 0 5px 5px; 
-    max-height: 50vh; /* Allow it to take up to half the screen height */
+    border-radius: 0 0 8px 8px; /* Slightly larger radius */
+    max-height: 60vh; /* Much taller, takes up to 60% of viewport height */
     overflow-y: auto; 
-    z-index: 100; /* Ensure it's on top of everything */
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Add a shadow to make it "pop" */
+    z-index: 1000; /* Extremely high z-index to ensure it's on top */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4); /* More prominent shadow */
 }
-/* Custom scrollbar for a better look */
-#suggestions-box::-webkit-scrollbar { width: 10px; }
+/* Custom scrollbar for a polished look */
+#suggestions-box::-webkit-scrollbar { width: 12px; }
 #suggestions-box::-webkit-scrollbar-track { background: #2c2c2d; }
-#suggestions-box::-webkit-scrollbar-thumb { background: #555; border-radius: 5px; }
+#suggestions-box::-webkit-scrollbar-thumb { background: #555; border-radius: 6px; border: 2px solid #2c2c2d; }
 #suggestions-box::-webkit-scrollbar-thumb:hover { background: #777; }
 
 .suggestion-item { padding: 8px 12px; cursor: pointer; text-transform: capitalize; display: flex; align-items: center; gap: 15px; }
@@ -104,18 +105,18 @@ body.theme-pokedex .pokedex-panel.left { display: flex; flex-direction: column; 
 .d-pad .center { width: 40px; height: 40px; top: 40px; left: 40px; border-radius: 50%; }
 .speaker-grille { display: flex; flex-direction: column; gap: 4px; }
 .speaker-line { width: 80px; height: 4px; background-color: #222; border-radius: 2px; }
-body.theme-pokedex .screen-container { background-color: var(--gb-lightest); color: var(--gb-darkest); border: 4px solid #222; padding: 15px; }
+body.theme-pokedex .screen-container { background-color: var(--gb-darkest); color: var(--gb-lightest); border: 4px solid #222; padding: 15px; }
 body.theme-pokedex header { margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; padding: 0; min-height: auto; }
-body.theme-pokedex h1 { font-family: var(--font-pixel); color: var(--gb-darkest); text-shadow: none; font-size: 1.5rem; text-align: center; }
-body.theme-pokedex #theme-switcher { background-color: var(--gb-darkest); color: var(--gb-lightest); border-radius: 0; border: none; justify-self: end; }
-body.theme-pokedex #guess-input { background-color: var(--gb-light); border-color: var(--gb-dark); border-radius: 0; color: var(--gb-darkest); }
+body.theme-pokedex h1 { font-family: var(--font-pixel); color: var(--gb-lightest); text-shadow: none; font-size: 1.5rem; text-align: center; }
+body.theme-pokedex #theme-switcher { background-color: var(--gb-dark); color: var(--gb-lightest); border-radius: 0; border: none; justify-self: end; }
+body.theme-pokedex #guess-input { background-color: var(--gb-lightest); border-color: var(--gb-dark); border-radius: 0; color: var(--gb-darkest); }
 body.theme-pokedex #guess-input::placeholder { color: var(--gb-dark); }
 body.theme-pokedex #submit-guess { background-color: var(--gb-dark); border: 2px solid var(--gb-darkest); color: var(--gb-lightest); border-radius: 0; }
-body.theme-pokedex .grid-cell { background-color: var(--gb-light); border: 1px solid var(--gb-dark); border-radius: 0; color: var(--gb-darkest); }
+body.theme-pokedex .grid-cell { background-color: var(--gb-lightest); border: 1px solid var(--gb-dark); border-radius: 0; color: var(--gb-darkest); }
 body.theme-pokedex .grid-header .grid-cell { background-color: transparent; border: none; font-weight: bold; }
 body.theme-pokedex .grid-cell.correct { background-color: var(--correct); color: white; }
 body.theme-pokedex .grid-cell.partial { background-color: var(--partial); color: white; }
-body.theme-pokedex #suggestions-box { background-color: var(--gb-light); border-color: var(--gb-dark); border-radius: 0; }
-body.theme-pokedex .suggestion-item:hover { background-color: var(--gb-lightest); }
+body.theme-pokedex #suggestions-box { background-color: var(--gb-lightest); border-color: var(--gb-darkest); border-radius: 0; }
+body.theme-pokedex .suggestion-item:hover { background-color: var(--gb-light); }
 body.theme-pokedex .modal-content { border-radius: 0; border: 4px solid var(--gb-darkest); background-color: var(--gb-lightest); color: var(--gb-darkest); }
 body.theme-pokedex #play-again-button { background-color: var(--gb-dark); border: 2px solid var(--gb-darkest); color: var(--gb-lightest); border-radius: 0; }
