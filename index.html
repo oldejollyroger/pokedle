@@ -29,11 +29,7 @@
                     <div class="d-pad-button center"></div>
                 </div>
                 <div class="speaker-grille">
-                    <div class="speaker-line"></div>
-                    <div class="speaker-line"></div>
-                    <div class="speaker-line"></div>
-                    <div class="speaker-line"></div>
-                    <div class="speaker-line"></div>
+                    <div class="speaker-line"></div><div class="speaker-line"></div><div class="speaker-line"></div><div class="speaker-line"></div><div class="speaker-line"></div>
                 </div>
             </div>
         </div>
@@ -47,29 +43,24 @@
                     <div id="game-container">
                         <div id="input-area">
                             <div class="autocomplete-container">
-                                <input type="text" id="guess-input" placeholder="Click here to see list..." autocomplete="off">
-                                <!-- THE SUGGESTION BOX IS NO LONGER HERE -->
+                                <input type="text" id="guess-input" placeholder="Click to see list..." autocomplete="off">
                             </div>
                             <button id="submit-guess">Guess!</button>
                         </div>
-                        <div id="guesses-grid">
-                            <div class="grid-header">
-                                <div class="grid-cell">Pokémon</div>
-                                <div class="grid-cell">Gen</div>
-                                <div class="grid-cell">Type 1</div>
-                                <div class="grid-cell">Type 2</div>
-                                <div class="grid-cell">Height</div>
-                                <div class="grid-cell">Weight</div>
-                                <div class="grid-cell">Evo. Stage</div>
+                        <!-- NEW: Wrapper for the grid for better scrolling control -->
+                        <div id="grid-wrapper">
+                            <div id="guesses-grid">
+                                <div class="grid-header">
+                                    <div class="grid-cell">Pokémon</div><div class="grid-cell">Gen</div><div class="grid-cell">Type 1</div><div class="grid-cell">Type 2</div><div class="grid-cell">Height</div><div class="grid-cell">Weight</div><div class="grid-cell">Evo. Stage</div>
+                                </div>
+                                <div id="grid-body"></div>
                             </div>
-                            <div id="grid-body"></div>
                         </div>
                     </div>
                 </main>
             </div>
         </div>
     </div>
-
     <div id="game-over-modal" class="modal-hidden">
         <div class="modal-content">
             <img id="winner-pokemon-image" src="" alt="Winning Pokémon">
@@ -77,10 +68,7 @@
             <button id="play-again-button">Play Again</button>
         </div>
     </div>
-    
-    <!-- FIX: The suggestion box is now here, at the top level of the body -->
     <div id="suggestions-box"></div>
-
     <script src="./database.js"></script>
     <script src="./script.js"></script>
 </body>
