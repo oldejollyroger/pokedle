@@ -8,7 +8,7 @@
 /* GLOBAL STYLES */
 body { display: flex; justify-content: center; align-items: center; margin: 0; padding: 2rem 1rem; transition: background-color 0.3s ease; min-height: 100vh; box-sizing: border-box; }
 .grid-cell.pokemon-cell img, .suggestion-item img, #winner-pokemon-image { image-rendering: pixelated; image-rendering: -moz-crisp-edges; image-rendering: crisp-edges; }
-#suggestions-box { position: fixed; display: none; max-height: 50vh; overflow-y: auto; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+#suggestions-box { position: fixed; display: none; max-height: 70vh; overflow-y: auto; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
 #suggestions-box::-webkit-scrollbar { width: 12px; }
 #suggestions-box::-webkit-scrollbar-track { background: #2c2c2d; }
 #suggestions-box::-webkit-scrollbar-thumb { background: #555; border-radius: 6px; border: 2px solid #2c2c2d; }
