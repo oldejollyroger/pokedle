@@ -16,34 +16,29 @@ document.addEventListener('DOMContentLoaded', () => {
     let guessedNames = new Set();
     let currentTheme = 'default';
 
-    // --- UPDATED HELPER FUNCTION FOR IMAGES ---
-    // This function returns the correct image URL based on the current theme.
     const getPokemonImageUrl = (id) => {
         const paddedId = String(id).padStart(3, '0');
         if (currentTheme === 'pokedex') {
-            // Use 8-bit sprites from the official sprite repository
             return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
         } else {
-            // Use high-res official artwork
             return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${paddedId}.png`;
         }
     };
 
     // --- THEME SWITCHING LOGIC ---
     function applyTheme(theme) {
-        currentTheme = theme; // Update the global theme variable
+        currentTheme = theme;
         if (theme === 'pokedex') {
             document.body.classList.add('theme-pokedex');
         } else {
             document.body.classList.remove('theme-pokedex');
         }
         localStorage.setItem('pokedle_theme', theme);
-        redrawGridWithNewImages(); // Redraw the grid to update sprites
+        redrawGridWithNewImages();
     }
 
-    // NEW: Function to redraw the grid when the theme changes
     function redrawGridWithNewImages() {
-        gridBody.innerHTML = ''; // Clear the existing grid
+        gridBody.innerHTML = '';
         const reversedGuesses = Array.from(guessedNames).reverse();
         reversedGuesses.forEach(name => {
             const pokemon = ALL_POKEMON_DATA.find(p => p.name === name);
@@ -62,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Game Initialization ---
     function initGame() {
-        // Load saved theme on startup
         const savedTheme = localStorage.getItem('pokedle_theme') || 'default';
         applyTheme(savedTheme);
 
@@ -81,13 +75,22 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateSuggestions() {
         const query = guessInput.value.toLowerCase();
         suggestionsBox.innerHTML = '';
-        const filteredPokemon = ALL_POKEMON_DATA.filter(p => {
-            const hasNotBeenGuessed = !guessedNames.has(p.name);
-            const matchesQuery = p.name.toLowerCase().startsWith(query);
-            return hasNotBeenGuessed && (query.length === 0 || matchesQuery);
-        });
 
-        filteredPokemon.forEach(pokemon => {
+        // Get all Pokémon that have not been guessed yet
+        const availablePokemon = ALL_POKEMON_DATA.filter(p => !guessedNames.has(p.name));
+        
+        let suggestionsToShow;
+
+        if (query.length === 0) {
+            // --- FIX: If input is empty, show a random sample of 12 Pokémon ---
+            const shuffled = availablePokemon.sort(() => 0.5 - Math.random());
+            suggestionsToShow = shuffled.slice(0, 12);
+        } else {
+            // --- If user is typing, filter the entire available list ---
+            suggestionsToShow = availablePokemon.filter(p => p.name.toLowerCase().startsWith(query));
+        }
+
+        suggestionsToShow.forEach(pokemon => {
             const div = document.createElement('div');
             div.className = 'suggestion-item';
             div.innerHTML = `
