@@ -17,7 +17,7 @@
 }
 
 body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); display: flex; justify-content: center; align-items: flex-start; margin: 0; padding: 2rem 1rem; transition: background-color 0.3s ease; min-height: 100vh; box-sizing: border-box; }
-#pokedex-body { width: 100%; max-width: 1200px; display: flex; justify-content: center; gap: 20px; min-height: 500px;}
+#pokedex-body { width: 100%; max-width: 1200px; display: flex; justify-content: center; gap: 20px; min-height: 90%;}
 .pokedex-panel.right { flex-grow: 1; }
 .pokedex-panel.left { display: none; }
 header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; width: 100%; }
@@ -38,7 +38,6 @@ main { width: 100%; }
     overflow-y: auto; 
     z-index: 1000;
     box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-    position: relative;
 }
 #suggestions-box::-webkit-scrollbar { width: 12px; }
 #suggestions-box::-webkit-scrollbar-track { background: #2c2c2d; }
