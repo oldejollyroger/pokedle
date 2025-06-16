@@ -36,10 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function redrawGridWithNewImages() {
         gridBody.innerHTML = '';
+        // Re-add the guessed Pokémon in the correct order (newest first)
         const reversedGuesses = Array.from(guessedNames).reverse();
         reversedGuesses.forEach(name => {
             const pokemon = ALL_POKEMON_DATA.find(p => p.name === name);
-            if (pokemon) { displayGuessRow(pokemon); }
+            if (pokemon) { displayGuessRow(pokemon, false); } // Pass false to prevent re-prepending to the set
         });
     }
 
@@ -66,9 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- Autocomplete Positioning and Logic ---
     function positionSuggestionsBox() {
-        // --- THE GUARANTEED FIX IS HERE ---
-        // We wrap the positioning logic in a timeout of 0ms.
-        // This pushes it to the end of the event queue, after the browser has finished rendering the CSS changes.
         setTimeout(() => {
             const inputRect = guessInput.getBoundingClientRect();
             suggestionsBox.style.left = `${inputRect.left}px`;
@@ -111,8 +109,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const guessedPokemon = ALL_POKEMON_DATA.find(p => p.name === guessName);
         if (!guessedPokemon) { alert("Pokémon not found!"); return; }
         if (guessedNames.has(guessName)) { alert("You've already guessed that Pokémon!"); return; }
+        
+        // This is a new guess, so add it to the history
         guessedNames.add(guessName);
-        displayGuessRow(guessedPokemon);
+        displayGuessRow(guessedPokemon, true); // Pass true to indicate it's a new guess
+
         if (guessedPokemon.name === secretPokemon.name) { endGame(true); }
         guessInput.value = '';
         suggestionsBox.style.display = 'none';
@@ -129,7 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.innerHTML = value;
         return cell;
     };
-    function displayGuessRow(guessedPokemon) {
+
+    // The isNewGuess parameter is no longer needed but kept for clarity on the redraw function
+    function displayGuessRow(guessedPokemon, isNewGuess = true) {
         const row = document.createElement('div');
         row.className = 'grid-row';
         const pokemonCellContent = `<img src="${getPokemonImageUrl(guessedPokemon.id)}" alt="${guessedPokemon.name}"><span>${guessedPokemon.name}</span>`;
@@ -141,8 +144,12 @@ document.addEventListener('DOMContentLoaded', () => {
         row.appendChild(compareAttribute(guessedPokemon.height, secretPokemon.height, 'm'));
         row.appendChild(compareAttribute(guessedPokemon.weight, secretPokemon.weight, 'kg'));
         row.appendChild(compareAttribute(guessedPokemon.evolutionStage, secretPokemon.evolutionStage, ''));
+        
+        // --- THE FIX IS HERE ---
+        // We ensure that prepend is always used to add the new row to the TOP of the grid.
         gridBody.prepend(row);
     }
+
     function compareTypes(guessed, secret) {
         const secretTypes = [secret.type1, secret.type2].filter(Boolean);
         let t1_status = 'incorrect';
@@ -153,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (secretTypes.includes(guessed.type2)) t2_status = 'partial';
         return [createCell(guessed.type1 || '---', t1_status), createCell(guessed.type2 || '---', t2_status)];
     }
+
     function compareAttribute(guessedValue, secretValue, unit) {
         let status = 'incorrect';
         let arrow = '';
@@ -161,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else { arrow = '<span>⬇️</span>'; }
         return createCell(`${guessedValue}${unit} ${arrow}`, status);
     }
+
     function endGame(isWin) {
         isGameOver = true;
         guessInput.disabled = true;
@@ -174,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.remove('modal-hidden');
         }, 1000);
     }
+    
     playAgainButton.addEventListener('click', initGame);
     initGame();
 });
